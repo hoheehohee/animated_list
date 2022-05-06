@@ -1,3 +1,4 @@
+import 'package:animated_list/list_model.dart';
 import 'package:flutter/material.dart';
 
 import 'card_item.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: AnimList(),
     );
@@ -39,6 +40,17 @@ class AnimList extends StatefulWidget {
 }
 
 class _AnimListState extends State<AnimList> {
+  late ListModel<int> _list;
+  int? _selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _list = ListModel<int>(
+      initialItems: <int>[1, 2, 3, 4, 5]
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,13 +70,24 @@ class _AnimListState extends State<AnimList> {
         ],
       ),
       body: AnimatedList(
-        initialItemCount: 5,
+        initialItemCount: _list.length,
         itemBuilder: _buildItem,
       )
     );
   }
 
+  void insert() {
+    final int index = _selectedItem == null ? _list.length ? _list.indexOf(_selectedItem);
+  }
+
   Widget _buildItem(BuildContext context, int index, Animation<double> animation) {
-    return CardItem(item: index,);
+    return CardItem(
+      item: _list[index],
+      selected: _selectedItem == _list[index],
+      onTap: () {
+        _selectedItem = _selectedItem == _list[index] ? null : _list[index];
+        setState(() {});
+      }
+    );
   }
 }
